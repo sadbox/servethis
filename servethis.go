@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
-    "net"
-    "strings"
+	"net"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func Log(handler http.Handler) http.Handler {
@@ -21,11 +21,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-    l, err := net.Listen("tcp4", ":0")
-    if err != nil {
-        panic(err)
-    }
-    addr := strings.Split(l.Addr().String(), ":")
+	l, err := net.Listen("tcp4", ":0")
+	if err != nil {
+		panic(err)
+	}
+	addr := strings.Split(l.Addr().String(), ":")
 
 	log.Printf("Serving %s at http://localhost:%s/. Ctrl+C to exit", cwd, addr[len(addr)-1])
 	log.Fatal(http.Serve(l, Log(http.FileServer(http.Dir(cwd)))))
