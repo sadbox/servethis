@@ -13,13 +13,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	l, err := net.Listen("tcp4", ":0")
+	listner, err := net.Listen("tcp4", ":0")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("Serving %s at http://%s/. Ctrl+C to exit", cwd, l.Addr())
-	log.Fatal(http.Serve(l, http.HandlerFunc(
+	log.Printf("Serving %s at http://%s/. Ctrl+C to exit", cwd, listner.Addr())
+	log.Fatal(http.Serve(listner, http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Served %s to %s", r.URL, r.RemoteAddr)
 			http.FileServer(http.Dir(cwd)).ServeHTTP(w, r)
