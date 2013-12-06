@@ -23,7 +23,7 @@ func main() {
 
 	l, err := net.Listen("tcp4", ":0")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	addr := strings.Split(l.Addr().String(), ":")
 
