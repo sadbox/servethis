@@ -1,8 +1,9 @@
 package main
 
 import (
-	"flag"
 	"log"
+    "net"
+    "strings"
 	"net/http"
 	"os"
 )
@@ -15,18 +16,17 @@ func Log(handler http.Handler) http.Handler {
 }
 
 func main() {
-	var port string
-	var directory string
-
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	flag.StringVar(&port, "p", "9001", "Port that you want the files served on")
-	flag.StringVar(&directory, "d", cwd, "Directory that you wish to be served")
-	flag.Parse()
+    l, err := net.Listen("tcp4", ":0")
+    if err != nil {
+        panic(err)
+    }
+    addr := strings.Split(l.Addr().String(), ":")
 
-	log.Printf("Serving %s at http://localhost:%s/. Ctrl+C to exit", directory, port)
-	log.Fatal(http.ListenAndServe(":"+port, Log(http.FileServer(http.Dir(directory)))))
+	log.Printf("Serving %s at http://localhost:%s/. Ctrl+C to exit", cwd, addr[len(addr)-1])
+	log.Fatal(http.Serve(l, Log(http.FileServer(http.Dir(cwd)))))
 }
